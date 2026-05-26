@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "re:flex",
+    "slug": "re-flex",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "reflex",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.reflex.reflex"
+    },
+    "android": {
+      "package": "com.reflex.reflex",
+      "adaptiveIcon": {
+        "backgroundColor": "#F8FAF7"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
