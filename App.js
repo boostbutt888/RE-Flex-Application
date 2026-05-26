@@ -565,7 +565,10 @@ export default function App() {
           </View>
           <View style={styles.roundBadge}>
             <Text style={styles.roundText}>
-              {roundNumber}/{TOTAL_ROUNDS}
+              Try {roundNumber}
+            </Text>
+            <Text style={styles.roundSubText}>
+              of {TOTAL_ROUNDS}
             </Text>
           </View>
         </View>
@@ -584,10 +587,12 @@ export default function App() {
 
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Hold and release reflex button"
-          disabled={sessionComplete}
-          onPressIn={startRound}
-          onPressOut={finishRound}
+          accessibilityLabel={
+            sessionComplete ? "Try button release again" : "Hold and release reflex button"
+          }
+          onPress={sessionComplete ? resetSession : undefined}
+          onPressIn={sessionComplete ? undefined : startRound}
+          onPressOut={sessionComplete ? undefined : finishRound}
           style={({ pressed }) => [
             styles.gameButton,
             isHolding || pressed ? styles.gameButtonActive : styles.gameButtonIdle,
@@ -595,7 +600,7 @@ export default function App() {
           ]}
         >
           <Text style={styles.gameButtonText}>
-            {sessionComplete ? "Session Done" : isHolding ? "Release" : "Hold"}
+            {sessionComplete ? "TRY AGAIN" : isHolding ? "Release" : "Hold"}
           </Text>
         </Pressable>
 
@@ -873,7 +878,13 @@ const styles = StyleSheet.create({
   },
   roundText: {
     color: "#24352B",
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: 0
+  },
+  roundSubText: {
+    color: "#5A675F",
+    fontSize: 14,
     fontWeight: "800",
     letterSpacing: 0
   },
@@ -1099,9 +1110,10 @@ const styles = StyleSheet.create({
   },
   gameButtonText: {
     color: "#FFFFFF",
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: "800",
-    letterSpacing: 0
+    letterSpacing: 0,
+    textAlign: "center"
   },
   resultPanel: {
     backgroundColor: "#FFFFFF",
