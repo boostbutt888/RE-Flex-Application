@@ -20,6 +20,7 @@ const COLOR_TILE_OPTIONS = [
   { name: "Green", value: "#2E8B57", textColor: "#FFFFFF" },
   { name: "Yellow", value: "#F2C94C", textColor: "#1E2A24" }
 ];
+const APP_VERSION = "0.1.1";
 
 function createTargetTime() {
   const minStep = Math.ceil(TARGET_MIN_SECONDS / TARGET_STEP_SECONDS);
@@ -356,14 +357,17 @@ export default function App() {
             <Text style={styles.startTagline}>your body coordination app</Text>
           </View>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Tap to start"
-            onPress={openExerciseSelection}
-            style={styles.startButton}
-          >
-            <Text style={styles.startButtonText}>Tap to Start</Text>
-          </Pressable>
+          <View style={styles.startFooter}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Tap to start"
+              onPress={openExerciseSelection}
+              style={styles.startButton}
+            >
+              <Text style={styles.startButtonText}>Tap to Start</Text>
+            </Pressable>
+            <Text style={styles.versionText}>Version {APP_VERSION}</Text>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -377,6 +381,7 @@ export default function App() {
           <View style={styles.selectionHeader}>
             <Text style={styles.brand}>re:flex</Text>
             <Text style={styles.selectionTitle}>Choose Exercise</Text>
+            <Text style={styles.versionText}>Version {APP_VERSION}</Text>
           </View>
 
           <Pressable
@@ -706,6 +711,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10
   },
+  startFooter: {
+    gap: 12,
+    width: "100%"
+  },
   startBrand: {
     color: "#1E2A24",
     fontSize: 58,
@@ -734,6 +743,13 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "800",
     letterSpacing: 0
+  },
+  versionText: {
+    color: "#6C7770",
+    fontSize: 14,
+    fontWeight: "700",
+    letterSpacing: 0,
+    textAlign: "center"
   },
   selectionScreen: {
     flex: 1,
