@@ -20,7 +20,29 @@ const COLOR_TILE_OPTIONS = [
   { name: "Green", value: "#2E8B57", textColor: "#FFFFFF" },
   { name: "Yellow", value: "#F2C94C", textColor: "#1E2A24" }
 ];
-const APP_VERSION = "0.1.1";
+const APP_VERSION = "0.1.2";
+const DAY_THEME = {
+  background: "#F8FAF7",
+  surface: "#FFFFFF",
+  softSurface: "#EEF3F0",
+  text: "#1E2A24",
+  mutedText: "#5A675F",
+  accent: "#24352B",
+  accentText: "#FFFFFF",
+  border: "#DCE5DE",
+  pill: "#E7F0EA"
+};
+const NIGHT_THEME = {
+  background: "#121A16",
+  surface: "#1D2923",
+  softSurface: "#24352B",
+  text: "#F4FAF6",
+  mutedText: "#B8C8BE",
+  accent: "#B7F2C7",
+  accentText: "#132018",
+  border: "#365144",
+  pill: "#2B4136"
+};
 
 function createTargetTime() {
   const minStep = Math.ceil(TARGET_MIN_SECONDS / TARGET_STEP_SECONDS);
@@ -113,6 +135,7 @@ function getTimerPanelColor(elapsedTime, targetTime) {
 
 export default function App() {
   const [activeScreen, setActiveScreen] = useState("start");
+  const [isNightMode, setIsNightMode] = useState(false);
   const [targetTime, setTargetTime] = useState(createTargetTime);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isHolding, setIsHolding] = useState(false);
@@ -137,6 +160,20 @@ export default function App() {
 
   const roundNumber = Math.min(attempts.length + 1, TOTAL_ROUNDS);
   const timerPanelColor = getTimerPanelColor(elapsedTime, targetTime);
+  const theme = isNightMode ? NIGHT_THEME : DAY_THEME;
+  const themedScreen = { backgroundColor: theme.background };
+  const themedSurface = {
+    backgroundColor: theme.surface,
+    borderColor: theme.border
+  };
+  const themedSoftSurface = { backgroundColor: theme.softSurface };
+  const themedText = { color: theme.text };
+  const themedMutedText = { color: theme.mutedText };
+  const themedAccent = {
+    backgroundColor: theme.accent
+  };
+  const themedAccentText = { color: theme.accentText };
+  const themedPill = { backgroundColor: theme.pill };
   const colorTargetPanelStyle =
     colorTileStage === "playing"
       ? {
@@ -349,12 +386,17 @@ export default function App() {
 
   if (activeScreen === "start") {
     return (
-      <SafeAreaView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F8FAF7" />
+      <SafeAreaView style={[styles.screen, themedScreen]}>
+        <StatusBar
+          barStyle={isNightMode ? "light-content" : "dark-content"}
+          backgroundColor={theme.background}
+        />
         <View style={styles.startScreen}>
           <View style={styles.startBrandBlock}>
-            <Text style={styles.startBrand}>RE:flex</Text>
-            <Text style={styles.startTagline}>your body coordination app</Text>
+            <Text style={[styles.startBrand, themedText]}>RE:flex</Text>
+            <Text style={[styles.startTagline, themedMutedText]}>
+              your body coordination app
+            </Text>
           </View>
 
           <View style={styles.startFooter}>
@@ -362,11 +404,15 @@ export default function App() {
               accessibilityRole="button"
               accessibilityLabel="Tap to start"
               onPress={openExerciseSelection}
-              style={styles.startButton}
+              style={[styles.startButton, themedAccent]}
             >
-              <Text style={styles.startButtonText}>Tap to Start</Text>
+              <Text style={[styles.startButtonText, themedAccentText]}>
+                Tap to Start
+              </Text>
             </Pressable>
-            <Text style={styles.versionText}>Version {APP_VERSION}</Text>
+            <Text style={[styles.versionText, themedMutedText]}>
+              Version {APP_VERSION}
+            </Text>
           </View>
         </View>
       </SafeAreaView>
@@ -375,46 +421,98 @@ export default function App() {
 
   if (activeScreen === "exerciseSelection") {
     return (
-      <SafeAreaView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F8FAF7" />
+      <SafeAreaView style={[styles.screen, themedScreen]}>
+        <StatusBar
+          barStyle={isNightMode ? "light-content" : "dark-content"}
+          backgroundColor={theme.background}
+        />
         <View style={styles.selectionScreen}>
           <View style={styles.selectionHeader}>
-            <Text style={styles.brand}>re:flex</Text>
-            <Text style={styles.selectionTitle}>Choose Exercise</Text>
-            <Text style={styles.versionText}>Version {APP_VERSION}</Text>
+            <Text style={[styles.brand, themedText]}>re:flex</Text>
+            <Text style={[styles.selectionTitle, themedText]}>Choose Exercise</Text>
           </View>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Start button release exercise"
-            onPress={openButtonRelease}
-            style={styles.exerciseOption}
-          >
-            <View style={styles.exerciseIcon}>
-              <Text style={styles.exerciseIconText}>1</Text>
-            </View>
-            <View style={styles.exerciseCopy}>
-              <Text style={styles.exerciseTitle}>Button Release</Text>
-              <Text style={styles.exerciseSubtitle}>Release close to the target time</Text>
-            </View>
-            <Text style={styles.exerciseArrow}>›</Text>
-          </Pressable>
+          <View style={styles.selectionOptions}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Start button release exercise"
+              onPress={openButtonRelease}
+              style={[styles.exerciseOption, themedSurface]}
+            >
+              <View style={[styles.exerciseIcon, themedPill]}>
+                <Text style={[styles.exerciseIconText, themedText]}>1</Text>
+              </View>
+              <View style={styles.exerciseCopy}>
+                <Text style={[styles.exerciseTitle, themedText]}>Button Release</Text>
+                <Text style={[styles.exerciseSubtitle, themedMutedText]}>
+                  Release close to the target time
+                </Text>
+              </View>
+              <Text style={[styles.exerciseArrow, themedMutedText]}>›</Text>
+            </Pressable>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Start colour tiles exercise"
-            onPress={openColorTiles}
-            style={styles.exerciseOption}
-          >
-            <View style={styles.exerciseIcon}>
-              <Text style={styles.exerciseIconText}>2</Text>
-            </View>
-            <View style={styles.exerciseCopy}>
-              <Text style={styles.exerciseTitle}>Colour Tiles</Text>
-              <Text style={styles.exerciseSubtitle}>Tap the tile matching the target colour</Text>
-            </View>
-            <Text style={styles.exerciseArrow}>›</Text>
-          </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Start colour tiles exercise"
+              onPress={openColorTiles}
+              style={[styles.exerciseOption, themedSurface]}
+            >
+              <View style={[styles.exerciseIcon, themedPill]}>
+                <Text style={[styles.exerciseIconText, themedText]}>2</Text>
+              </View>
+              <View style={styles.exerciseCopy}>
+                <Text style={[styles.exerciseTitle, themedText]}>Colour Tiles</Text>
+                <Text style={[styles.exerciseSubtitle, themedMutedText]}>
+                  Tap the tile matching the target colour
+                </Text>
+              </View>
+              <Text style={[styles.exerciseArrow, themedMutedText]}>›</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.selectionFooter}>
+            <Pressable
+              accessibilityRole="switch"
+              accessibilityState={{ checked: isNightMode }}
+              accessibilityLabel="Switch day and night mode"
+              onPress={() => setIsNightMode((currentValue) => !currentValue)}
+              style={[styles.themeToggle, themedSurface]}
+            >
+              <View
+                style={[
+                  styles.themeToggleOption,
+                  !isNightMode ? themedAccent : themedPill
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.themeToggleText,
+                    !isNightMode ? themedAccentText : themedMutedText
+                  ]}
+                >
+                  Day
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.themeToggleOption,
+                  isNightMode ? themedAccent : themedPill
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.themeToggleText,
+                    isNightMode ? themedAccentText : themedMutedText
+                  ]}
+                >
+                  Night
+                </Text>
+              </View>
+            </Pressable>
+            <Text style={[styles.versionText, themedMutedText]}>
+              Version {APP_VERSION}
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -422,25 +520,28 @@ export default function App() {
 
   if (activeScreen === "colorTiles") {
     return (
-      <SafeAreaView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F8FAF7" />
+      <SafeAreaView style={[styles.screen, themedScreen]}>
+        <StatusBar
+          barStyle={isNightMode ? "light-content" : "dark-content"}
+          backgroundColor={theme.background}
+        />
         <View style={styles.content}>
           <View style={styles.gameHeader}>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Back to exercise selection"
               onPress={openExerciseSelection}
-              style={styles.backButton}
+              style={[styles.backButton, themedPill]}
             >
-              <Text style={styles.backButtonText}>‹ Back</Text>
+              <Text style={[styles.backButtonText, themedText]}>‹ Back</Text>
             </Pressable>
             <View style={styles.gameTitleBlock}>
-              <Text style={styles.brand}>re:flex</Text>
-              <Text style={styles.subtitle}>Colour Tiles</Text>
+              <Text style={[styles.brand, themedText]}>re:flex</Text>
+              <Text style={[styles.subtitle, themedMutedText]}>Colour Tiles</Text>
             </View>
           </View>
 
-          <View style={[styles.colorStatusPanel, colorTargetPanelStyle]}>
+          <View style={[styles.colorStatusPanel, themedSurface, colorTargetPanelStyle]}>
             <Text style={[styles.colorTargetLabel, colorTargetTextStyle]}>
               Target Display
             </Text>
@@ -461,9 +562,9 @@ export default function App() {
                 accessibilityRole="button"
                 accessibilityLabel="Start colour tiles countdown"
                 onPress={startColorTilesCountdown}
-                style={styles.startButton}
+                style={[styles.startButton, themedAccent]}
               >
-                <Text style={styles.startButtonText}>Start</Text>
+                <Text style={[styles.startButtonText, themedAccentText]}>Start</Text>
               </Pressable>
             </View>
           ) : null}
@@ -522,17 +623,22 @@ export default function App() {
           ) : null}
 
           <View style={styles.topScoresPanel}>
-            <Text style={styles.topScoresTitle}>Top 5 Scores</Text>
+            <Text style={[styles.topScoresTitle, themedText]}>Top 5 Scores</Text>
             {Array.from({ length: 5 }).map((_, index) => {
               const score = colorTopScores[index];
 
               return (
-                <View key={score?.id ?? index.toString()} style={styles.topScoreRow}>
-                  <Text style={styles.topScoreRank}>{index + 1}</Text>
-                  <Text style={styles.topScoreMain}>
+                <View
+                  key={score?.id ?? index.toString()}
+                  style={[styles.topScoreRow, themedSurface]}
+                >
+                  <Text style={[styles.topScoreRank, themedMutedText]}>
+                    {index + 1}
+                  </Text>
+                  <Text style={[styles.topScoreMain, themedText]}>
                     {score ? score.averageScore : "--"}
                   </Text>
-                  <Text style={styles.topScoreMeta}>
+                  <Text style={[styles.topScoreMeta, themedMutedText]}>
                     {score ? formatAchievedAt(score.achievedAt) : "--"}
                   </Text>
                 </View>
@@ -545,34 +651,39 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAF7" />
+    <SafeAreaView style={[styles.screen, themedScreen]}>
+      <StatusBar
+        barStyle={isNightMode ? "light-content" : "dark-content"}
+        backgroundColor={theme.background}
+      />
       <View style={styles.content}>
         <View style={styles.gameHeader}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Back to exercise selection"
             onPress={openExerciseSelection}
-            style={styles.backButton}
+            style={[styles.backButton, themedPill]}
           >
-            <Text style={styles.backButtonText}>‹ Back</Text>
+            <Text style={[styles.backButtonText, themedText]}>‹ Back</Text>
           </Pressable>
           <View style={styles.gameTitleBlock}>
-            <Text style={styles.brand}>re:flex</Text>
-            <Text style={styles.subtitle}>Button Release</Text>
+            <Text style={[styles.brand, themedText]}>re:flex</Text>
+            <Text style={[styles.subtitle, themedMutedText]}>Button Release</Text>
           </View>
         </View>
 
-        <View style={styles.targetPanel}>
+        <View style={[styles.targetPanel, themedSurface]}>
           <View>
-            <Text style={styles.label}>Target</Text>
-            <Text style={styles.targetValue}>{formatSeconds(targetTime)}s</Text>
+            <Text style={[styles.label, themedMutedText]}>Target</Text>
+            <Text style={[styles.targetValue, themedText]}>
+              {formatSeconds(targetTime)}s
+            </Text>
           </View>
-          <View style={styles.roundBadge}>
-            <Text style={styles.roundText}>
+          <View style={[styles.roundBadge, themedPill]}>
+            <Text style={[styles.roundText, themedText]}>
               Try {roundNumber}
             </Text>
-            <Text style={styles.roundSubText}>
+            <Text style={[styles.roundSubText, themedMutedText]}>
               of {TOTAL_ROUNDS}
             </Text>
           </View>
@@ -610,23 +721,23 @@ export default function App() {
         </Pressable>
 
         {lastResult ? (
-          <View style={styles.resultPanel}>
+          <View style={[styles.resultPanel, themedSurface]}>
             <View style={styles.resultGrid}>
-              <View style={styles.resultItem}>
-                <Text style={styles.label}>Released</Text>
-                <Text style={styles.resultValue}>
+              <View style={[styles.resultItem, themedSoftSurface]}>
+                <Text style={[styles.label, themedMutedText]}>Released</Text>
+                <Text style={[styles.resultValue, themedText]}>
                   {formatSeconds(lastResult.releasedTime)}s
                 </Text>
               </View>
-              <View style={styles.resultItem}>
-                <Text style={styles.label}>Missed by</Text>
-                <Text style={styles.resultValue}>
+              <View style={[styles.resultItem, themedSoftSurface]}>
+                <Text style={[styles.label, themedMutedText]}>Missed by</Text>
+                <Text style={[styles.resultValue, themedText]}>
                   {formatSeconds(lastResult.difference)}s
                 </Text>
               </View>
-              <View style={styles.resultItem}>
-                <Text style={styles.label}>Score</Text>
-                <Text style={styles.resultValue}>{lastResult.score}</Text>
+              <View style={[styles.resultItem, themedSoftSurface]}>
+                <Text style={[styles.label, themedMutedText]}>Score</Text>
+                <Text style={[styles.resultValue, themedText]}>{lastResult.score}</Text>
               </View>
             </View>
           </View>
@@ -672,17 +783,20 @@ export default function App() {
         )}
 
         <View style={styles.topScoresPanel}>
-          <Text style={styles.topScoresTitle}>Top 5 Scores</Text>
+          <Text style={[styles.topScoresTitle, themedText]}>Top 5 Scores</Text>
           {Array.from({ length: 5 }).map((_, index) => {
             const score = buttonTopScores[index];
 
             return (
-              <View key={score?.id ?? index.toString()} style={styles.topScoreRow}>
-                <Text style={styles.topScoreRank}>{index + 1}</Text>
-                <Text style={styles.topScoreMain}>
+              <View
+                key={score?.id ?? index.toString()}
+                style={[styles.topScoreRow, themedSurface]}
+              >
+                <Text style={[styles.topScoreRank, themedMutedText]}>{index + 1}</Text>
+                <Text style={[styles.topScoreMain, themedText]}>
                   {score ? score.averageScore : "--"}
                 </Text>
-                <Text style={styles.topScoreMeta}>
+                <Text style={[styles.topScoreMeta, themedMutedText]}>
                   {score ? formatAchievedAt(score.achievedAt) : "--"}
                 </Text>
               </View>
@@ -753,13 +867,39 @@ const styles = StyleSheet.create({
   },
   selectionScreen: {
     flex: 1,
-    gap: 24,
+    justifyContent: "space-between",
     paddingBottom: 24,
     paddingHorizontal: 20,
     paddingTop: 18
   },
   selectionHeader: {
     gap: 6
+  },
+  selectionOptions: {
+    gap: 16
+  },
+  selectionFooter: {
+    gap: 12
+  },
+  themeToggle: {
+    borderColor: "#DCE5DE",
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: 8,
+    padding: 8
+  },
+  themeToggleOption: {
+    alignItems: "center",
+    borderRadius: 8,
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 46
+  },
+  themeToggleText: {
+    fontSize: 17,
+    fontWeight: "900",
+    letterSpacing: 0
   },
   selectionTitle: {
     color: "#24352B",

@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.1.2 - 2026-05-28
+
+- Moved the exercise selection screen version number to the bottom of the page.
+- Added a day/night mode selector on the exercise selection screen.
+- Applied the selected visual mode across startup, selection, and exercise screens.
+
 ## 0.1.1 - 2026-05-28
 
 - Added visible app version text to the startup screen.
